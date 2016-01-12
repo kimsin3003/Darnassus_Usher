@@ -9,7 +9,7 @@ class DatabaseManager
 public:
 
 	void Initialize(SQLHENV *henv, SQLHDBC *hdbc);
-	void Connect(SQLHDBC hDbc, SQLWCHAR *username, SQLWCHAR *password);
+	void Connect(SQLHDBC hDbc, SQLWCHAR* connName, SQLWCHAR *username, SQLWCHAR *password);
 	void Disconnect(SQLHDBC hDbc);
 	bool SelectDB(SQLHSTMT hStmt);
 	int ProcessStatement(SQLHENV henv, SQLHDBC hdbc, SQLWCHAR *sqlstr);

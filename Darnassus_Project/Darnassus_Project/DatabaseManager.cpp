@@ -26,11 +26,11 @@ void DatabaseManager::Initialize(SQLHENV *henv,
 	ret = SQLAllocHandle(SQL_HANDLE_DBC, *henv, hdbc);
 }
 
-void DatabaseManager::Connect(SQLHDBC hDbc,SQLWCHAR *username, SQLWCHAR *password)
+void DatabaseManager::Connect(SQLHDBC hDbc, SQLWCHAR* connName,SQLWCHAR *username, SQLWCHAR *password)
 {
 	int ret;
 
-	ret = SQLConnect(hDbc, (SQLWCHAR*)L"local", SQL_NTS, username, SQL_NTS, password, SQL_NTS);
+	ret = SQLConnect(hDbc, connName, SQL_NTS, username, SQL_NTS, password, SQL_NTS);
 
 	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO)
 		printf("SQL Connect Ok \n");
@@ -151,13 +151,13 @@ void DatabaseManager::DisplayResults(SQLHSTMT hstmt, SQLSMALLINT nresultcols)
 {
 	
 	int ret;
-	int iCount = 0;
+	int iCount = 1;
 	/* display result rows                                            */
 	while ((ret = SQLFetch(hstmt)) != SQL_NO_DATA_FOUND)
 	{
 		SQLLEN iDataLen;
 		char data[200];
-		_tprintf(_T(" Row %d : "), iCount);
+		_tprintf(_T(" Row %d  | "), iCount);
 		if (ret == SQL_ERROR || ret == SQL_SUCCESS_WITH_INFO) {
 			printf("An Fetch error occured\n");
 			break;
@@ -170,15 +170,18 @@ void DatabaseManager::DisplayResults(SQLHSTMT hstmt, SQLSMALLINT nresultcols)
 			{
 				SQLGetData(hstmt, i, SQL_C_WCHAR, &data, 200, &iDataLen);
 				/* Print the row of data */
-				_tprintf(_T(" %ls"), data);
+				_tprintf(_T("%25ls"), data);
 				fflush(stdout);
 			} /* for all columns in this row  */
 
-			printf("\n");
+			printf("\n-----------------------------------------------------------------------------------------------------------------------------------------------\n");
 		}
 
 		iCount++;
 	} /* while rows to fetch */
+
+	if (iCount == 1)
+		printf("No data found\n");
 
 }
 
